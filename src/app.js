@@ -2,11 +2,12 @@ import React from "react";
 import { render } from "react-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Chart from "./chart";
+import { io } from "socket.io-client";
 
-const styles = theme => ({
+const styles = (theme) => ({
   "chart-container": {
-    height: 400
-  }
+    height: 400,
+  },
 });
 
 class App extends React.Component {
@@ -23,27 +24,27 @@ class App extends React.Component {
           pointBorderColor: this.props.theme.palette.secondary.main,
           borderWidth: "2",
           lineTension: 0.45,
-          data: []
-        }
-      ]
+          data: [],
+        },
+      ],
     },
     lineChartOptions: {
       responsive: true,
       maintainAspectRatio: false,
       tooltips: {
-        enabled: true
+        enabled: true,
       },
       scales: {
         xAxes: [
           {
             ticks: {
               autoSkip: true,
-              maxTicksLimit: 10
-            }
-          }
-        ]
-      }
-    }
+              maxTicksLimit: 10,
+            },
+          },
+        ],
+      },
+    },
   };
 
   componentDidMount() {
@@ -52,18 +53,18 @@ class App extends React.Component {
       channels: [
         {
           name: "ticker",
-          product_ids: ["BTC-USD"]
-        }
-      ]
+          product_ids: ["BTC-USD"],
+        },
+      ],
     };
 
-    this.ws = new WebSocket("wss://ws-feed.gdax.com");
+    this.ws = io("wss://ws-feed.gdax.com");
 
     this.ws.onopen = () => {
       this.ws.send(JSON.stringify(subscribe));
     };
 
-    this.ws.onmessage = e => {
+    this.ws.onmessage = (e) => {
       const value = JSON.parse(e.data);
       if (value.type !== "ticker") {
         return;
@@ -78,7 +79,7 @@ class App extends React.Component {
         datasets: [newBtcDataSet],
         labels: this.state.lineChartData.labels.concat(
           new Date().toLocaleTimeString()
-        )
+        ),
       };
       this.setState({ lineChartData: newChartData });
     };
