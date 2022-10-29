@@ -59,7 +59,8 @@ class App extends React.Component {
     };
 
     this.ws = new WebSocket("wss://ws-feed.pro.coinbase.com");
-    console.log("Client io:-", io("wss://ws-feed.pro.coinbase.com"));
+    const sock = io("wss://ws-feed.pro.coinbase.com");
+    console.log("Client io:-", sock);
     this.ws.onopen = () => {
       this.ws.send(JSON.stringify(subscribe));
     };
