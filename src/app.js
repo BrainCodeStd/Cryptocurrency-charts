@@ -58,8 +58,8 @@ class App extends React.Component {
       ],
     };
 
-    this.ws = io("wss://ws-feed.pro.coinbase.com");
-
+    this.ws = new WebSocket("wss://ws-feed.pro.coinbase.com");
+    console.log("Client io:-", io("wss://ws-feed.pro.coinbase.com"));
     this.ws.onopen = () => {
       this.ws.send(JSON.stringify(subscribe));
     };
@@ -69,6 +69,7 @@ class App extends React.Component {
       if (value.type !== "ticker") {
         return;
       }
+      console.log("Value from websocket", value);
 
       const oldBtcDataSet = this.state.lineChartData.datasets[0];
       const newBtcDataSet = { ...oldBtcDataSet };
